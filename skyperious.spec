@@ -9,12 +9,13 @@ Source0:	https://github.com/suurjaak/Skyperious/archive/master/%{name}-%{version
 URL:		https://github.com/suurjaak/Skyperious
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.219
+Requires:	python(sqlite)
 Requires:	python-PIL
 Requires:	python-dateutil
 Requires:	python-pyparsing
-Requires:	python-skype
 Requires:	python-wxPython
 Requires:	python-xlsxwriter
+Suggests:	python-skype
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
