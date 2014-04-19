@@ -1,7 +1,7 @@
 Summary:	Skype SQLite database viewer and merger
 Name:		skyperious
 Version:	3.1
-Release:	0.1
+Release:	0.4
 License:	MIT
 Group:		Applications
 Source0:	https://github.com/suurjaak/Skyperious/archive/master/%{name}-%{version}.tar.gz
@@ -18,6 +18,8 @@ Requires:	python-xlsxwriter
 Suggests:	python-skype
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%define		_appdir	%{_datadir}/%{name}
 
 %description
 Skyperious is a Skype database viewer and merger, written in Python.
@@ -38,17 +40,22 @@ You can open local Skype SQLite databases and look at their contents:
 %setup -qc
 mv Skyperious-*/* .
 
-%build
-%{__python} setup.py build
+cat <<'EOF' > skyperious.sh
+#!/bin/sh
+file=$(readlink -f "$0")
+dir=$(dirname "$file")
+exec %{__python} $dir/src/main.pyc "$@"
+EOF
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%{__python} setup.py install \
-	--skip-build \
-	--optimize=2 \
-	--root=$RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT{%{_bindir},%{_appdir}}
+cp -a src res %{name}.sh $RPM_BUILD_ROOT%{_appdir}
+ln -s %{_appdir}/%{name}.sh $RPM_BUILD_ROOT%{_bindir}
 
-%py_postclean
+%py_ocomp $RPM_BUILD_ROOT%{_appdir}
+%py_comp $RPM_BUILD_ROOT%{_appdir}
+%py_postclean %{_appdir}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -56,4 +63,11 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc README.md CHANGELOG.md LICENSE.md
-
+%attr(755,root,root) %{_bindir}/skyperious.sh
+%dir %{_appdir}
+%attr(755,root,root) %{_appdir}/skyperious.sh
+%{_appdir}/res
+%dir %{_appdir}/src
+%dir %{_appdir}/src/third_party
+%{_appdir}/src/*.py[co]
+%{_appdir}/src/third_party/*.py[co]
