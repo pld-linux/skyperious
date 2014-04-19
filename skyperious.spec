@@ -13,9 +13,9 @@ Requires:	python(sqlite)
 Requires:	python-PIL
 Requires:	python-dateutil
 Requires:	python-pyparsing
-Requires:	python-wxPython
 Requires:	python-xlsxwriter
 Suggests:	python-skype
+Suggests:	python-wxPython
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
