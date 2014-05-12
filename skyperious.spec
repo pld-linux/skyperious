@@ -1,13 +1,12 @@
 Summary:	Skype SQLite database viewer and merger
 Name:		skyperious
-Version:	3.1
-Release:	0.7
+Version:	3.2
+Release:	0.3
 License:	MIT
 Group:		Applications/Databases
-Source0:	https://github.com/suurjaak/Skyperious/archive/master/%{name}-%{version}.tar.gz
-# Source0-md5:	1a2f6e3b369c435a23ac796915890b60
-Source1:	https://raw.githubusercontent.com/glensc/Skyperious/desktop/packaging/%{name}.desktop
-# Source1-md5:	b6e430c377ca6754c5905fdf94bc1d8e
+Source0:	https://github.com/suurjaak/Skyperious/archive/v%{version}/%{name}-%{version}.tar.gz
+# Source0-md5:	f053b9c8e2821cc67c892893fb9401fb
+Patch0:		desktop.patch
 URL:		https://github.com/suurjaak/Skyperious
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.219
@@ -16,9 +15,9 @@ Requires:	python(sqlite)
 Requires:	python-PIL
 Requires:	python-dateutil
 Requires:	python-pyparsing
-Requires:	python-xlsxwriter
 Suggests:	python-skype
 Suggests:	python-wxPython
+Suggests:	python-xlsxwriter
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -40,8 +39,8 @@ You can open local Skype SQLite databases and look at their contents:
   older files into the current one
 
 %prep
-%setup -qc
-mv Skyperious-*/* .
+%setup -qn Skyperious-%{version}
+%patch0 -p1
 
 cat <<'EOF' > skyperious.sh
 #!/bin/sh
@@ -57,7 +56,7 @@ cp -a src res %{name}.sh $RPM_BUILD_ROOT%{_appdir}
 ln -s %{_appdir}/%{name}.sh $RPM_BUILD_ROOT%{_bindir}/%{name}
 
 cp -p res/Icon64x64_32bit.png $RPM_BUILD_ROOT%{_pixmapsdir}/%{name}.png
-cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_desktopdir}
+cp -p packaging/%{name}.desktop $RPM_BUILD_ROOT%{_desktopdir}
 
 %py_ocomp $RPM_BUILD_ROOT%{_appdir}
 %py_comp $RPM_BUILD_ROOT%{_appdir}

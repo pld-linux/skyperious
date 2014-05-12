@@ -1,0 +1,8 @@
+--- Skyperious-3.2/packaging/skyperious.desktop~	2014-05-08 22:12:29.000000000 +0300
++++ Skyperious-3.2/packaging/skyperious.desktop	2014-05-10 20:17:01.615195482 +0300
+@@ -5,4 +5,4 @@
+ Exec=skyperious
+ Name=Skyperious
+ Icon=skyperious
+-Categories=Utility;Database;InstantMessaging;Chat;GTK;
++Categories=Utility;Database;InstantMessaging;Chat;GTK;Network;
