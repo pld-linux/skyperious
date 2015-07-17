@@ -1,11 +1,11 @@
 Summary:	Skype SQLite database viewer and merger
 Name:		skyperious
-Version:	3.2
-Release:	0.3
+Version:	3.5
+Release:	0.1
 License:	MIT
 Group:		Applications/Databases
 Source0:	https://github.com/suurjaak/Skyperious/archive/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	f053b9c8e2821cc67c892893fb9401fb
+# Source0-md5:	56a23e2c330a4ac917b915ed5ff8af3d
 Patch0:		desktop.patch
 URL:		https://github.com/suurjaak/Skyperious
 BuildRequires:	rpm-pythonprov
@@ -42,25 +42,21 @@ You can open local Skype SQLite databases and look at their contents:
 %setup -qn Skyperious-%{version}
 %patch0 -p1
 
-cat <<'EOF' > skyperious.sh
-#!/bin/sh
-file=$(readlink -f "$0")
-dir=$(dirname "$file")
-exec %{__python} $dir/src/main.pyc "$@"
-EOF
+%build
+%{__python} setup.py build
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_bindir},%{_appdir},%{_pixmapsdir},%{_desktopdir}}
-cp -a src res %{name}.sh $RPM_BUILD_ROOT%{_appdir}
-ln -s %{_appdir}/%{name}.sh $RPM_BUILD_ROOT%{_bindir}/%{name}
+%{__python} setup.py install \
+	--skip-build \
+	--optimize=2 \
+	--root=$RPM_BUILD_ROOT
 
+%py_postclean
+
+install -d $RPM_BUILD_ROOT{%{_pixmapsdir},%{_desktopdir}}
 cp -p res/Icon64x64_32bit.png $RPM_BUILD_ROOT%{_pixmapsdir}/%{name}.png
-cp -p packaging/%{name}.desktop $RPM_BUILD_ROOT%{_desktopdir}
-
-%py_ocomp $RPM_BUILD_ROOT%{_appdir}
-%py_comp $RPM_BUILD_ROOT%{_appdir}
-%py_postclean %{_appdir}
+cp -p dist/%{name}.desktop $RPM_BUILD_ROOT%{_desktopdir}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -75,12 +71,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc README.md CHANGELOG.md LICENSE.md
 %attr(755,root,root) %{_bindir}/skyperious
-%dir %{_appdir}
-%attr(755,root,root) %{_appdir}/skyperious.sh
-%{_appdir}/res
-%dir %{_appdir}/src
-%dir %{_appdir}/src/third_party
-%{_appdir}/src/*.py[co]
-%{_appdir}/src/third_party/*.py[co]
+%dir %{py_sitescriptdir}/%{name}
+%{py_sitescriptdir}/%{name}/*.py[co]
+%{py_sitescriptdir}/%{name}/third_party
+%{py_sitescriptdir}/%{name}/skyperious.ini
+%{py_sitescriptdir}/Skyperious-%{version}-py*.egg-info
 %{_desktopdir}/%{name}.desktop
 %{_pixmapsdir}/%{name}.png
+
+# FIXME: use system fonts
+%{py_sitescriptdir}/%{name}/res
