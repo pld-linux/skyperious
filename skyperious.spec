@@ -1,7 +1,7 @@
 Summary:	Skype SQLite database viewer and merger
 Name:		skyperious
 Version:	3.5
-Release:	0.1
+Release:	0.2
 License:	MIT
 Group:		Applications/Databases
 Source0:	https://github.com/suurjaak/Skyperious/archive/v%{version}/%{name}-%{version}.tar.gz
@@ -9,7 +9,7 @@ Source0:	https://github.com/suurjaak/Skyperious/archive/v%{version}/%{name}-%{ve
 Patch0:		desktop.patch
 URL:		https://github.com/suurjaak/Skyperious
 BuildRequires:	rpm-pythonprov
-BuildRequires:	rpmbuild(macros) >= 1.219
+BuildRequires:	rpmbuild(macros) >= 1.713
 Requires:	desktop-file-utils
 Requires:	python(sqlite)
 Requires:	python-PIL
@@ -43,15 +43,11 @@ You can open local Skype SQLite databases and look at their contents:
 %patch0 -p1
 
 %build
-%{__python} setup.py build
+%py_build
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%{__python} setup.py install \
-	--skip-build \
-	--optimize=2 \
-	--root=$RPM_BUILD_ROOT
-
+%py_install
 %py_postclean
 
 install -d $RPM_BUILD_ROOT{%{_pixmapsdir},%{_desktopdir}}
