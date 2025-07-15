@@ -40,7 +40,7 @@ You can open local Skype SQLite databases and look at their contents:
 
 %prep
 %setup -qn Skyperious-%{version}
-%patch0 -p1
+%patch -P0 -p1
 
 %build
 %py_build
